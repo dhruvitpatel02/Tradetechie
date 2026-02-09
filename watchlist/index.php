@@ -8,18 +8,20 @@ requireLogin();
 $api = new StockAPI();
 $user_id = $_SESSION['user_id'];
 
-// Get user's watchlist
-$stmt = $conn->prepare("
-    SELECT w.*, s.symbol, s.company_name, s.last_price, s.change_percent, s.sector, s.last_updated
-    FROM user_watchlist w
-    JOIN stock_companies s ON w.company_id = s.company_id
-    WHERE w.user_id = ?
-    ORDER BY w.added_at DESC
-");
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$watchlist = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
-$stmt->close();
+$watchlist = [];
+$conn = db();
+
+if ($conn) {
+    $stmt = $conn->prepare("
+        SELECT w.*, s.symbol, s.company_name, s.last_price, s.change_percent, s.sector, s.last_updated
+        FROM user_watchlist w
+        JOIN stock_companies s ON w.company_id = s.company_id
+        WHERE w.user_id = ?
+        ORDER BY w.added_at DESC
+    ");
+    $stmt->execute([$user_id]);
+    $watchlist = $stmt->fetchAll();
+}
 ?>
 
 <div class="container my-5">

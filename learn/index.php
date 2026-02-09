@@ -2,23 +2,20 @@
 $page_title = 'Learn Stock Market';
 require_once __DIR__ . '/../includes/header.php';
 
-// Get category filter
 $category_filter = $_GET['category'] ?? null;
 
-// Get user progress
 $completed = [];
 if (isset($_SESSION['user_id'])) {
-    $stmt = $conn->prepare("SELECT content_id FROM user_progress WHERE user_id = ?");
-    $stmt->bind_param("i", $_SESSION['user_id']);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    while ($row = $result->fetch_assoc()) {
-        $completed[] = $row['content_id'];
+    $conn = db();
+    if ($conn) {
+        $stmt = $conn->prepare("SELECT content_id FROM user_progress WHERE user_id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        foreach ($stmt->fetchAll() as $row) {
+            $completed[] = $row['content_id'];
+        }
     }
-    $stmt->close();
 }
 
-// Get all content
 $all_content = getAllContent($category_filter);
 
 // Category names
