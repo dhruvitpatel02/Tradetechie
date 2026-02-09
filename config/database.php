@@ -1,23 +1,32 @@
 <?php
-
-define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_USER', getenv('DB_USER') ?: 'root');
-define('DB_PASS', getenv('DB_PASS') ?: '');
-define('DB_NAME', getenv('DB_NAME') ?: 'tradetechie_db');
-
 function getDBConnection() {
+    // If DB env variables are NOT set, skip DB connection
+    if (
+        empty($_ENV['DB_HOST']) ||
+        empty($_ENV['DB_NAME']) ||
+        empty($_ENV['DB_USER'])
+    ) {
+        return null;
+    }
+
     try {
-        $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
-        $options = [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-            PDO::ATTR_EMULATE_PREPARES => false,
-        ];
-        return new PDO($dsn, DB_USER, DB_PASS, $options);
-    } catch (PDOException $e) {
-        error_log("Database connection failed: " . $e->getMessage());
-        die("Service temporarily unavailable. Please try again later.");
+        $dsn = "mysql:host=" . $_ENV['DB_HOST'] .
+               ";dbname=" . $_ENV['DB_NAME'] .
+               ";charset=utf8mb4";
+
+        $pdo = new PDO(
+            $dsn,
+            $_ENV['DB_USER'],
+            $_ENV['DB_PASS'] ?? '',
+            [
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            ]
+        );
+
+        return $pdo;
+
+    } catch (Exception $e) {
+        // DO NOT crash the site
+        return null;
     }
 }
-
-$conn = getDBConnection();

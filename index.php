@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "/config/database.php";
 $page_title = 'Home';
 require_once __DIR__ . '/includes/header.php';
 ?>
