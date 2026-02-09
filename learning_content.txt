@@ -1,0 +1,210 @@
+=========================
+BEGINNER LEVEL
+=========================
+Title: What is Stock Market
+
+Category: Beginner
+
+Content:
+The stock market is a place where shares of companies are bought and sold. When you buy a share, you become a small owner of that company. Companies use the stock market to raise money for growth, and investors use it to grow their wealth.
+
+Example:
+If you buy 1 share of TCS, you own a small part of TCS.
+
+Risk Note:
+Stock prices go up and down, so returns are not guaranteed.
+
+Title: NSE and BSE
+
+Category: Beginner
+
+Content:
+NSE (National Stock Exchange) and BSE (Bombay Stock Exchange) are India’s two main stock exchanges. NSE is known for higher trading volume, while BSE is Asia’s oldest stock exchange.
+
+Example:
+Nifty 50 belongs to NSE, Sensex belongs to BSE.
+
+Risk Note:
+Both exchanges are regulated, but market risk still exists.
+
+Title: What is Equity
+
+Category: Beginner
+
+Content:
+Equity means ownership in a company. When you buy equity shares, you become a shareholder and can benefit from price appreciation and dividends.
+
+Example:
+Buying Infosys shares for long-term investment.
+
+Risk Note:
+Equity value depends on company performance and market conditions.
+
+=========================
+INTERMEDIATE LEVEL
+=========================
+Title: What is Short Selling
+
+Category: Intermediate
+
+Content:
+Short selling is a trading method where you sell a stock first and buy it later at a lower price. It is mainly used in intraday trading.
+
+How it works:
+
+You sell a stock you don’t own
+
+Price falls
+
+You buy it back cheaper
+
+Profit = selling price – buying price
+
+Example:
+Sell a stock at ₹500, buy back at ₹450 → profit ₹50.
+
+Risk Note:
+Loss can be unlimited if the price goes up.
+
+Title: Commodity Trading
+
+Category: Intermediate
+
+Content:
+Commodity trading involves buying and selling physical goods like gold, silver, crude oil, and agricultural products. In India, commodities are traded mainly on MCX.
+
+Example:
+Gold futures trading on MCX.
+
+Risk Note:
+Commodity prices are affected by global events and currency changes.
+
+=========================
+ADVANCED LEVEL – DERIVATIVES
+=========================
+Title: What are Options
+
+Category: Advanced
+
+Content:
+Options are financial contracts that give the buyer the right, but not the obligation, to buy or sell an asset at a fixed price before expiry.
+
+Key terms:
+
+Strike Price
+
+Premium
+
+Expiry Date
+
+Risk Note:
+Options are risky and require proper understanding.
+
+Title: Call Option
+
+Category: Advanced
+
+Content:
+A call option gives the buyer the right to buy a stock at a fixed price. Traders buy call options when they expect the market to go up.
+
+Example:
+Buying a call option of Nifty when expecting an uptrend.
+
+Risk Note:
+Option premium can become zero if prediction is wrong.
+
+Title: Put Option
+
+Category: Advanced
+
+Content:
+A put option gives the buyer the right to sell a stock at a fixed price. Traders buy put options when they expect the market to fall.
+
+Example:
+Buying a put option to protect a portfolio.
+
+Risk Note:
+Wrong market direction leads to premium loss.
+
+Title: Option Buying vs Option Selling
+
+Category: Advanced
+
+Content:
+Option buyers have limited loss but limited time. Option sellers earn premium but face higher risk.
+
+Comparison:
+
+Buyer: Limited loss, high reward
+
+Seller: Limited reward, high risk
+
+Risk Note:
+Option selling requires experience and margin.
+
+=========================
+ANALYSIS
+=========================
+Title: Fundamental Analysis
+
+Category: Advanced
+
+Content:
+Fundamental analysis studies a company’s financial health using revenue, profit, balance sheet, and ratios like PE and ROE.
+
+Example:
+Analyzing TCS financials before investing.
+
+Risk Note:
+Good fundamentals don’t guarantee short-term gains.
+
+Title: Technical Analysis
+
+Category: Advanced
+
+Content:
+Technical analysis studies price charts and indicators to predict future price movement.
+
+Key tools:
+
+Support & Resistance
+
+Trendlines
+
+Volume
+
+Risk Note:
+Indicators can give false signals.
+
+=========================
+RISK MANAGEMENT
+=========================
+Title: Risk Management in Trading
+
+Category: Advanced
+
+Content:
+Risk management helps traders protect capital. It includes stop-loss, position sizing, and capital allocation.
+
+Example:
+Risking only 1–2% of capital per trade.
+
+Risk Note:
+Ignoring risk management leads to losses.
+
+Title: Trading Psychology
+
+Category: Advanced
+
+Content:
+Trading psychology focuses on emotions like fear and greed. Successful traders follow discipline and rules.
+
+Example:
+Not overtrading after a loss.
+
+Risk Note:
+Emotional trading is one of the biggest reasons for failure.
+
+=========================
+END OF CONTENT
+=========================
