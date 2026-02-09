@@ -9,10 +9,8 @@ $note_id = intval($_GET['id'] ?? 0);
 
 // Get note
 $stmt = $conn->prepare("SELECT n.*, s.symbol, s.company_name FROM stock_notes n JOIN stock_companies s ON n.company_id = s.company_id WHERE n.note_id = ? AND n.user_id = ?");
-$stmt->bind_param("ii", $note_id, $user_id);
-$stmt->execute();
-$note = $stmt->get_result()->fetch_assoc();
-$stmt->close();
+$stmt->execute([$note_id, $user_id]);
+$note = $stmt->fetch();
 
 if (!$note) {
     setFlashMessage('error', 'Note not found.');
@@ -35,9 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         setFlashMessage('error', 'Title and content are required.');
     } else {
         $stmt = $conn->prepare("UPDATE stock_notes SET note_title = ?, note_content = ? WHERE note_id = ? AND user_id = ?");
-        $stmt->bind_param("ssii", $title, $content, $note_id, $user_id);
         
-        if ($stmt->execute()) {
+        if ($stmt->execute([$title, $content, $note_id, $user_id])) {
             logActivity($user_id, 'Note Updated', 'Updated note for ' . $note['symbol']);
             setFlashMessage('success', 'Note updated successfully!');
             header('Location: index.php?stock=' . $note['company_id']);
@@ -45,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             setFlashMessage('error', 'Failed to update note.');
         }
-        $stmt->close();
     }
 }
 ?>

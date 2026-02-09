@@ -13,16 +13,13 @@ $user_id = $_SESSION['user_id'];
 $watchlist_id = intval($_POST['watchlist_id']);
 
 $stmt = $conn->prepare("DELETE FROM user_watchlist WHERE watchlist_id = ? AND user_id = ?");
-$stmt->bind_param("ii", $watchlist_id, $user_id);
 
-if ($stmt->execute()) {
+if ($stmt->execute([$watchlist_id, $user_id])) {
     logActivity($user_id, 'Watchlist Remove', 'Removed stock from watchlist');
     setFlashMessage('success', 'Stock removed from watchlist.');
 } else {
     setFlashMessage('error', 'Failed to remove stock.');
 }
-
-$stmt->close();
 header('Location: index.php');
 exit();
 ?>

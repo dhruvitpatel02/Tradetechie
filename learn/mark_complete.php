@@ -12,13 +12,10 @@ $user_id = $_SESSION['user_id'];
 $content_id = intval($_POST['content_id']);
 
 $stmt = $conn->prepare("INSERT IGNORE INTO user_progress (user_id, content_id) VALUES (?, ?)");
-$stmt->bind_param("ii", $user_id, $content_id);
 
-if ($stmt->execute()) {
+if ($stmt->execute([$user_id, $content_id])) {
     echo json_encode(['success' => true]);
 } else {
     echo json_encode(['success' => false]);
 }
-
-$stmt->close();
 ?>

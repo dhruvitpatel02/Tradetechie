@@ -55,14 +55,11 @@ if ($action === 'register') {
     
     // Check if email already exists
     $stmt = $conn->prepare("SELECT user_id FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->execute([$email]);
     
-    if ($result->num_rows > 0) {
+    if ($stmt->rowCount() > 0) {
         $errors[] = 'Email address already registered.';
     }
-    $stmt->close();
     
     // If validation fails
     if (!empty($errors)) {
@@ -76,10 +73,9 @@ if ($action === 'register') {
     
     // Insert user into database
     $stmt = $conn->prepare("INSERT INTO users (full_name, email, phone, password, user_type, status) VALUES (?, ?, ?, ?, 'user', 'active')");
-    $stmt->bind_param("ssss", $full_name, $email, $phone, $hashed_password);
     
-    if ($stmt->execute()) {
-        $user_id = $stmt->insert_id;
+    if ($stmt->execute([$full_name, $email, $phone, $hashed_password])) {
+        $user_id = $conn->lastInsertId();
         
         // Log activity
         logActivity($user_id, 'User Registration', 'New user registered: ' . $email);
@@ -99,8 +95,6 @@ if ($action === 'register') {
         setFlashMessage('error', 'Registration failed. Please try again.');
         header('Location: register.php');
     }
-    
-    $stmt->close();
     exit();
 }
 
@@ -122,19 +116,15 @@ if ($action === 'login') {
     
     // Fetch user from database
     $stmt = $conn->prepare("SELECT user_id, full_name, email, password, user_type, status FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->execute([$email]);
     
-    if ($result->num_rows === 0) {
+    if ($stmt->rowCount() === 0) {
         setFlashMessage('error', 'Invalid email or password.');
         header('Location: login.php');
-        $stmt->close();
         exit();
     }
     
-    $user = $result->fetch_assoc();
-    $stmt->close();
+    $user = $stmt->fetch();
     
     // Check if account is active
     if ($user['status'] !== 'active') {

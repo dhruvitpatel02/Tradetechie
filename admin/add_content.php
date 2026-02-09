@@ -27,20 +27,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     // Check if slug already exists
     $stmt = $conn->prepare("SELECT content_id FROM educational_content WHERE slug = ?");
-    $stmt->bind_param("s", $slug);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    $stmt->execute([$slug]);
     
-    if ($result->num_rows > 0) {
+    if ($stmt->rowCount() > 0) {
         $slug = $slug . '-' . time();
     }
-    $stmt->close();
     
     // Insert content
     $stmt = $conn->prepare("INSERT INTO educational_content (title, slug, category, content, meta_description, order_position, status, created_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssssisi", $title, $slug, $category, $content, $meta_description, $order_position, $status, $_SESSION['user_id']);
     
-    if ($stmt->execute()) {
+    if ($stmt->execute([$title, $slug, $category, $content, $meta_description, $order_position, $status, $_SESSION['user_id']])) {
         logActivity($_SESSION['user_id'], 'Content Created', 'Created content: ' . $title);
         setFlashMessage('success', 'Content created successfully!');
         header('Location: content_manage.php');
@@ -49,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: add_content.php');
     }
     
-    $stmt->close();
     exit();
 }
 ?>

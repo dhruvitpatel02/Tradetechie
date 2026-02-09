@@ -14,9 +14,7 @@ function logActivity($user_id, $action, $description = '') {
     
     $ip_address = $_SERVER['REMOTE_ADDR'];
     $stmt = $conn->prepare("INSERT INTO activity_log (user_id, action, description, ip_address) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("isss", $user_id, $action, $description, $ip_address);
-    $stmt->execute();
-    $stmt->close();
+    $stmt->execute([$user_id, $action, $description, $ip_address]);
 }
 
 /**
@@ -26,13 +24,8 @@ function getUserById($user_id) {
     global $conn;
     
     $stmt = $conn->prepare("SELECT user_id, full_name, email, phone, user_type, status, created_at FROM users WHERE user_id = ?");
-    $stmt->bind_param("i", $user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
-    $stmt->close();
-    
-    return $user;
+    $stmt->execute([$user_id]);
+    return $stmt->fetch();
 }
 
 /**
@@ -43,18 +36,13 @@ function getAllContent($category = null, $status = 'published') {
     
     if ($category) {
         $stmt = $conn->prepare("SELECT * FROM educational_content WHERE category = ? AND status = ? ORDER BY order_position ASC, created_at DESC");
-        $stmt->bind_param("ss", $category, $status);
+        $stmt->execute([$category, $status]);
     } else {
         $stmt = $conn->prepare("SELECT * FROM educational_content WHERE status = ? ORDER BY order_position ASC, created_at DESC");
-        $stmt->bind_param("s", $status);
+        $stmt->execute([$status]);
     }
     
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $content = $result->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-    
-    return $content;
+    return $stmt->fetchAll();
 }
 
 /**
@@ -64,18 +52,12 @@ function getContentBySlug($slug) {
     global $conn;
     
     $stmt = $conn->prepare("SELECT * FROM educational_content WHERE slug = ? AND status = 'published'");
-    $stmt->bind_param("s", $slug);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $content = $result->fetch_assoc();
-    $stmt->close();
+    $stmt->execute([$slug]);
+    $content = $stmt->fetch();
     
-    // Increment view count
     if ($content) {
         $update_stmt = $conn->prepare("UPDATE educational_content SET views = views + 1 WHERE content_id = ?");
-        $update_stmt->bind_param("i", $content['content_id']);
-        $update_stmt->execute();
-        $update_stmt->close();
+        $update_stmt->execute([$content['content_id']]);
     }
     
     return $content;
@@ -88,13 +70,8 @@ function getContentById($content_id) {
     global $conn;
     
     $stmt = $conn->prepare("SELECT * FROM educational_content WHERE content_id = ?");
-    $stmt->bind_param("i", $content_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $content = $result->fetch_assoc();
-    $stmt->close();
-    
-    return $content;
+    $stmt->execute([$content_id]);
+    return $stmt->fetch();
 }
 
 /**
@@ -106,7 +83,7 @@ function countContentByCategory() {
     $result = $conn->query("SELECT category, COUNT(*) as count FROM educational_content WHERE status = 'published' GROUP BY category");
     $counts = [];
     
-    while ($row = $result->fetch_assoc()) {
+    foreach ($result->fetchAll() as $row) {
         $counts[$row['category']] = $row['count'];
     }
     
@@ -120,7 +97,7 @@ function getTotalUsers() {
     global $conn;
     
     $result = $conn->query("SELECT COUNT(*) as count FROM users WHERE user_type = 'user'");
-    $row = $result->fetch_assoc();
+    $row = $result->fetch();
     
     return $row['count'];
 }
@@ -132,12 +109,7 @@ function getRecentActivities($limit = 10) {
     global $conn;
     
     $stmt = $conn->prepare("SELECT al.*, u.full_name, u.email FROM activity_log al LEFT JOIN users u ON al.user_id = u.user_id ORDER BY al.created_at DESC LIMIT ?");
-    $stmt->bind_param("i", $limit);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $activities = $result->fetch_all(MYSQLI_ASSOC);
-    $stmt->close();
-    
-    return $activities;
+    $stmt->execute([$limit]);
+    return $stmt->fetchAll();
 }
 ?>

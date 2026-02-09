@@ -11,17 +11,12 @@ $content_counts = countContentByCategory();
 
 // Get watchlist count
 $stmt = $conn->prepare("SELECT COUNT(*) as count FROM user_watchlist WHERE user_id = ?");
-$stmt->bind_param("i", $_SESSION['user_id']);
-$stmt->execute();
-$watchlist_count = $stmt->get_result()->fetch_assoc()['count'];
-$stmt->close();
+$stmt->execute([$_SESSION['user_id']]);
+$watchlist_count = $stmt->fetch()['count'];
 
-// Get notes count
 $stmt = $conn->prepare("SELECT COUNT(*) as count FROM stock_notes WHERE user_id = ?");
-$stmt->bind_param("i", $_SESSION['user_id']);
-$stmt->execute();
-$notes_count = $stmt->get_result()->fetch_assoc()['count'];
-$stmt->close();
+$stmt->execute([$_SESSION['user_id']]);
+$notes_count = $stmt->fetch()['count'];
 ?>
 
 <div class="container my-5">

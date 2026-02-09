@@ -15,10 +15,8 @@ if ($company_id === 0) {
 
 // Get stock details
 $stmt = $conn->prepare("SELECT * FROM stock_companies WHERE company_id = ?");
-$stmt->bind_param("i", $company_id);
-$stmt->execute();
-$stock = $stmt->get_result()->fetch_assoc();
-$stmt->close();
+$stmt->execute([$company_id]);
+$stock = $stmt->fetch();
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -36,9 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         setFlashMessage('error', 'Title and content are required.');
     } else {
         $stmt = $conn->prepare("INSERT INTO stock_notes (user_id, company_id, note_title, note_content, tags) VALUES (?, ?, ?, ?, ?)");
-        $stmt->bind_param("iisss", $user_id, $company_id, $title, $content, $tags);
         
-        if ($stmt->execute()) {
+        if ($stmt->execute([$user_id, $company_id, $title, $content, $tags])) {
             logActivity($user_id, 'Note Created', 'Created note for ' . $stock['symbol']);
             setFlashMessage('success', 'Note created successfully!');
             header('Location: index.php?stock=' . $company_id);
@@ -46,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             setFlashMessage('error', 'Failed to create note.');
         }
-        $stmt->close();
     }
 }
 ?>

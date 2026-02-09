@@ -1,34 +1,23 @@
 <?php
-/**
- * Database Configuration
- * Contains database connection parameters
- */
 
-// Database credentials
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'tradetechie_db');
+define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
+define('DB_USER', getenv('DB_USER') ?: 'root');
+define('DB_PASS', getenv('DB_PASS') ?: '');
+define('DB_NAME', getenv('DB_NAME') ?: 'tradetechie_db');
 
-// Create database connection
 function getDBConnection() {
     try {
-        $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-        
-        // Check connection
-        if ($conn->connect_error) {
-            throw new Exception("Connection failed: " . $conn->connect_error);
-        }
-        
-        // Set charset to utf8mb4 for proper character support
-        $conn->set_charset("utf8mb4");
-        
-        return $conn;
-    } catch (Exception $e) {
-        die("Database Error: " . $e->getMessage());
+        $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
+        $options = [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ];
+        return new PDO($dsn, DB_USER, DB_PASS, $options);
+    } catch (PDOException $e) {
+        error_log("Database connection failed: " . $e->getMessage());
+        die("Service temporarily unavailable. Please try again later.");
     }
 }
 
-// Get database connection instance
 $conn = getDBConnection();
-?>
