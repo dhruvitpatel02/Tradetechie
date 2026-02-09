@@ -10,7 +10,8 @@ require_once __DIR__ . '/../config/config.php';
  * Log user activity
  */
 function logActivity($user_id, $action, $description = '') {
-    global $conn;
+    $conn = db();
+    if (!$conn) return;
     
     $ip_address = $_SERVER['REMOTE_ADDR'];
     $stmt = $conn->prepare("INSERT INTO activity_log (user_id, action, description, ip_address) VALUES (?, ?, ?, ?)");
@@ -21,7 +22,8 @@ function logActivity($user_id, $action, $description = '') {
  * Get user by ID
  */
 function getUserById($user_id) {
-    global $conn;
+    $conn = db();
+    if (!$conn) return null;
     
     $stmt = $conn->prepare("SELECT user_id, full_name, email, phone, user_type, status, created_at FROM users WHERE user_id = ?");
     $stmt->execute([$user_id]);
@@ -32,7 +34,8 @@ function getUserById($user_id) {
  * Get all educational content
  */
 function getAllContent($category = null, $status = 'published') {
-    global $conn;
+    $conn = db();
+    if (!$conn) return [];
     
     if ($category) {
         $stmt = $conn->prepare("SELECT * FROM educational_content WHERE category = ? AND status = ? ORDER BY order_position ASC, created_at DESC");
@@ -49,7 +52,8 @@ function getAllContent($category = null, $status = 'published') {
  * Get content by slug
  */
 function getContentBySlug($slug) {
-    global $conn;
+    $conn = db();
+    if (!$conn) return null;
     
     $stmt = $conn->prepare("SELECT * FROM educational_content WHERE slug = ? AND status = 'published'");
     $stmt->execute([$slug]);
@@ -67,7 +71,8 @@ function getContentBySlug($slug) {
  * Get content by ID
  */
 function getContentById($content_id) {
-    global $conn;
+    $conn = db();
+    if (!$conn) return null;
     
     $stmt = $conn->prepare("SELECT * FROM educational_content WHERE content_id = ?");
     $stmt->execute([$content_id]);
@@ -78,7 +83,8 @@ function getContentById($content_id) {
  * Count content by category
  */
 function countContentByCategory() {
-    global $conn;
+    $conn = db();
+    if (!$conn) return [];
     
     $result = $conn->query("SELECT category, COUNT(*) as count FROM educational_content WHERE status = 'published' GROUP BY category");
     $counts = [];
@@ -94,19 +100,21 @@ function countContentByCategory() {
  * Get total users count
  */
 function getTotalUsers() {
-    global $conn;
+    $conn = db();
+    if (!$conn) return 0;
     
     $result = $conn->query("SELECT COUNT(*) as count FROM users WHERE user_type = 'user'");
     $row = $result->fetch();
     
-    return $row['count'];
+    return $row['count'] ?? 0;
 }
 
 /**
  * Get recent activities
  */
 function getRecentActivities($limit = 10) {
-    global $conn;
+    $conn = db();
+    if (!$conn) return [];
     
     $stmt = $conn->prepare("SELECT al.*, u.full_name, u.email FROM activity_log al LEFT JOIN users u ON al.user_id = u.user_id ORDER BY al.created_at DESC LIMIT ?");
     $stmt->execute([$limit]);

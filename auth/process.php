@@ -8,15 +8,20 @@ require_once __DIR__ . '/../config/config.php';
 require_once __DIR__ . '/../includes/functions.php';
 require_once __DIR__ . '/../includes/email.php';
 
-// Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header('Location: ' . SITE_URL);
     exit();
 }
 
-// Verify CSRF token
 if (!isset($_POST['csrf_token']) || !verifyCSRFToken($_POST['csrf_token'])) {
     setFlashMessage('error', 'Invalid request. Please try again.');
+    header('Location: ' . SITE_URL);
+    exit();
+}
+
+$conn = db();
+if (!$conn) {
+    setFlashMessage('error', 'Service temporarily unavailable. Please try again later.');
     header('Location: ' . SITE_URL);
     exit();
 }

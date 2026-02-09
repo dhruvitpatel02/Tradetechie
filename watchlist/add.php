@@ -9,6 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !verifyCSRFToken($_POST['csrf_token
     exit();
 }
 
+$conn = db();
+if (!$conn) {
+    setFlashMessage('error', 'Service temporarily unavailable.');
+    header('Location: index.php');
+    exit();
+}
+
 $user_id = $_SESSION['user_id'];
 $company_id = intval($_POST['company_id']);
 

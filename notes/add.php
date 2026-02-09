@@ -13,15 +13,32 @@ if ($company_id === 0) {
     exit();
 }
 
-// Get stock details
-$stmt = $conn->prepare("SELECT * FROM stock_companies WHERE company_id = ?");
-$stmt->execute([$company_id]);
-$stock = $stmt->fetch();
+$conn = db();
+$stock = null;
+
+if ($conn) {
+    $stmt = $conn->prepare("SELECT * FROM stock_companies WHERE company_id = ?");
+    $stmt->execute([$company_id]);
+    $stock = $stmt->fetch();
+}
+
+if (!$stock) {
+    setFlashMessage('error', 'Stock not found or service unavailable.');
+    header('Location: ../watchlist/');
+    exit();
+}
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verifyCSRFToken($_POST['csrf_token'])) {
         setFlashMessage('error', 'Invalid request.');
+        header('Location: add.php?stock=' . $company_id);
+        exit();
+    }
+    
+    $conn = db();
+    if (!$conn) {
+        setFlashMessage('error', 'Service temporarily unavailable.');
         header('Location: add.php?stock=' . $company_id);
         exit();
     }

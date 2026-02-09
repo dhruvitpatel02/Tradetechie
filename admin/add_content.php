@@ -2,14 +2,18 @@
 $page_title = 'Add Content';
 require_once __DIR__ . '/../includes/header.php';
 
-// Require admin access
 requireAdmin();
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Verify CSRF token
     if (!verifyCSRFToken($_POST['csrf_token'])) {
         setFlashMessage('error', 'Invalid request.');
+        header('Location: add_content.php');
+        exit();
+    }
+    
+    $conn = db();
+    if (!$conn) {
+        setFlashMessage('error', 'Service temporarily unavailable.');
         header('Location: add_content.php');
         exit();
     }

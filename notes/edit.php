@@ -7,13 +7,17 @@ requireLogin();
 $user_id = $_SESSION['user_id'];
 $note_id = intval($_GET['id'] ?? 0);
 
-// Get note
-$stmt = $conn->prepare("SELECT n.*, s.symbol, s.company_name FROM stock_notes n JOIN stock_companies s ON n.company_id = s.company_id WHERE n.note_id = ? AND n.user_id = ?");
-$stmt->execute([$note_id, $user_id]);
-$note = $stmt->fetch();
+$conn = db();
+$note = null;
+
+if ($conn) {
+    $stmt = $conn->prepare("SELECT n.*, s.symbol, s.company_name FROM stock_notes n JOIN stock_companies s ON n.company_id = s.company_id WHERE n.note_id = ? AND n.user_id = ?");
+    $stmt->execute([$note_id, $user_id]);
+    $note = $stmt->fetch();
+}
 
 if (!$note) {
-    setFlashMessage('error', 'Note not found.');
+    setFlashMessage('error', 'Note not found or service unavailable.');
     header('Location: ../watchlist/');
     exit();
 }
@@ -22,6 +26,13 @@ if (!$note) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verifyCSRFToken($_POST['csrf_token'])) {
         setFlashMessage('error', 'Invalid request.');
+        header('Location: edit.php?id=' . $note_id);
+        exit();
+    }
+    
+    $conn = db();
+    if (!$conn) {
+        setFlashMessage('error', 'Service temporarily unavailable.');
         header('Location: edit.php?id=' . $note_id);
         exit();
     }

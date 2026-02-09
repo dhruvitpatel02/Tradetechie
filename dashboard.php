@@ -2,21 +2,26 @@
 $page_title = 'Dashboard';
 require_once __DIR__ . '/includes/header.php';
 
-// Require login
 requireLogin();
 
-// Get user data
 $user = getUserById($_SESSION['user_id']);
 $content_counts = countContentByCategory();
 
-// Get watchlist count
-$stmt = $conn->prepare("SELECT COUNT(*) as count FROM user_watchlist WHERE user_id = ?");
-$stmt->execute([$_SESSION['user_id']]);
-$watchlist_count = $stmt->fetch()['count'];
+$conn = db();
+$watchlist_count = 0;
+$notes_count = 0;
 
-$stmt = $conn->prepare("SELECT COUNT(*) as count FROM stock_notes WHERE user_id = ?");
-$stmt->execute([$_SESSION['user_id']]);
-$notes_count = $stmt->fetch()['count'];
+if ($conn) {
+    $stmt = $conn->prepare("SELECT COUNT(*) as count FROM user_watchlist WHERE user_id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $result = $stmt->fetch();
+    $watchlist_count = $result['count'] ?? 0;
+
+    $stmt = $conn->prepare("SELECT COUNT(*) as count FROM stock_notes WHERE user_id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $result = $stmt->fetch();
+    $notes_count = $result['count'] ?? 0;
+}
 ?>
 
 <div class="container my-5">
