@@ -1,0 +1,47 @@
+TRADETECHIE - SETUP INSTRUCTIONS
+=================================
+
+1. START XAMPP
+   - Start Apache
+   - Start MySQL
+
+2. CREATE DATABASE
+   - Open phpMyAdmin: http://localhost/phpmyadmin
+   - Import database.sql
+   - Import database_extended.sql
+
+3. ACCESS APPLICATION
+   - Homepage: http://localhost/Personal%20Projects/Tradetechie/
+   - Login: http://localhost/Personal%20Projects/Tradetechie/auth/login.php
+
+4. DEFAULT ADMIN LOGIN
+   Email: admin@tradetechie.com
+   Password: Admin@123
+
+5. FEATURES
+   - Learn Section: Educational content about stock market
+   - Watchlist: Track your favorite stocks
+   - Notes: Write personal notes for each stock
+   - Admin Panel: Manage educational content
+
+6. FOLDER STRUCTURE
+   /auth/          - Login, Register, Logout
+   /admin/         - Admin panel (CRUD for content)
+   /learn/         - Learning modules
+   /watchlist/     - Stock watchlist
+   /notes/         - Stock notes
+   /config/        - Database & site configuration
+   /includes/      - Header, footer, functions
+   /assets/        - CSS, JS, images
+   /api/           - Stock API wrapper
+
+7. DATABASE TABLES
+   - users
+   - educational_content
+   - stock_companies
+   - user_watchlist
+   - stock_notes
+   - user_sessions
+   - activity_log
+
+That's it! Start exploring the platform.
